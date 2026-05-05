@@ -124,7 +124,7 @@ export default function DashboardTasksPage() {
           .eq('applicant_id', user.id)
           .in('task_id', taskIds)
 
-        const appliedSet = new Set(apps?.map(a => a.task_id))
+        const appliedSet = new Set(apps?.map((a: any) => a.task_id))
         const tasksWithApps = data.map((t: Task) => ({
           ...t,
           my_application: appliedSet.has(t.id) ? {} : undefined,
