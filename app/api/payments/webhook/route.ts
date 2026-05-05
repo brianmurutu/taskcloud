@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
 
             await supabase.from('profiles').update({
               wallet_balance: (profile?.wallet_balance || 0) + depositAmount
-            }).eq('id', userId)
+            } as any).eq('id', userId)
           }
         }
         break
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
 
           await supabase.from('profiles').update({
             wallet_balance: (profile?.wallet_balance || 0) + (amount / 100)
-          }).eq('id', tx.user_id)
+          } as any).eq('id', tx.user_id)
 
           await supabase.from('notifications').insert({
             user_id: tx.user_id,

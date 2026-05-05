@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       reference: reference as string,
       description: 'Wallet top-up via Paystack',
       paystack_data: paystackData,
-    })
+    } as any)
 
     // Credit wallet
     const { data: profile } = await supabaseServer
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     const newBalance = (profile?.wallet_balance || 0) + verifiedAmount
     await supabaseServer
       .from('profiles')
-      .update({ wallet_balance: newBalance })
+      .update({ wallet_balance: newBalance } as any)
       .eq('id', user.id)
 
     // Create notification
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
       title: 'Wallet Funded',
       body: `${verifiedCurrency} ${verifiedAmount.toLocaleString()} has been added to your wallet.`,
       data: { reference, amount: verifiedAmount },
-    })
+    } as any)
 
     return NextResponse.json({
       success: true,

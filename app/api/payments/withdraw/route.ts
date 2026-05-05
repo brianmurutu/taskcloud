@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     // Deduct from wallet
     await supabaseServer
       .from('profiles')
-      .update({ wallet_balance: profile.wallet_balance - amount })
+      .update({ wallet_balance: profile.wallet_balance - amount } as any)
       .eq('id', user.id)
 
     // Record transaction
