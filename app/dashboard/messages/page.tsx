@@ -118,7 +118,7 @@ export default function MessagesPage() {
         schema: 'public',
         table: 'messages',
         filter: `receiver_id=eq.${user.id}`,
-      }, (payload) => {
+      }, (payload: any) => {
         const newMsg = payload.new as Message
         if (newMsg.sender_id === activeConv) {
           setMessages(prev => [...prev, newMsg])
