@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: 'Invalid amount' }, { status: 400 })
     }
 
-    const supabaseServer = createServerSupabaseClient()
+    const supabaseServer = createServerSupabaseClient() as any
 
     // Auth
     const token = req.cookies.get('sb-access-token')?.value
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     // Deduct from wallet
     await supabaseServer
       .from('profiles')
-      .update({ wallet_balance: profile.wallet_balance - amount } as any)
+      .update({ wallet_balance: profile.wallet_balance - amount })
       .eq('id', user.id)
 
     // Record transaction
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
       status: 'pending',
       reference: reference as string,
       description: `Withdrawal to M-Pesa ${phone}`,
-    } as any)
+    })
 
     // Create notification
     await supabaseServer.from('notifications').insert({
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
       title: 'Withdrawal Requested',
       body: `Your withdrawal of ${currency} ${amount.toLocaleString()} is being processed.`,
       data: { reference, amount, phone } as Record<string, unknown>,
-    } as any)
+    })
 
     // TODO: In production, trigger Paystack Transfer API here:
     // POST https://api.paystack.co/transfer with Authorization: Bearer {PAYSTACK_SECRET_KEY}

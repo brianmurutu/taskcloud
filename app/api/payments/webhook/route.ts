@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     const event = JSON.parse(body)
-    const supabase = createServerSupabaseClient()
+    const supabase = createServerSupabaseClient() as any
 
     switch (event.event) {
       case 'charge.success': {
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
               reference: reference as string,
               description: 'Wallet top-up via Paystack',
               paystack_data: event.data as Record<string, unknown>,
-            } as any)
+            })
 
             const { data: profile } = await supabase
               .from('profiles')
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
 
             await supabase.from('profiles').update({
               wallet_balance: (profile?.wallet_balance || 0) + depositAmount
-            } as any).eq('id', userId)
+            }).eq('id', userId)
           }
         }
         break
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
             type: 'withdrawal_failed',
             title: 'Withdrawal Failed',
             body: `Your withdrawal of ${currency} ${(amount / 100).toLocaleString()} failed. Funds have been returned to your wallet.`,
-          } as any)
+          })
         }
         break
       }
