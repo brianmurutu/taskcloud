@@ -58,7 +58,7 @@ export default function MessagesPage() {
     }
 
     // Count unread
-    for (const [, conv] of convMap) {
+    for (const [, conv] of Array.from(convMap)) {
       const unread = (data as Message[]).filter(
         m => m.sender_id === conv.user.id && m.receiver_id === user.id && !m.is_read
       ).length
