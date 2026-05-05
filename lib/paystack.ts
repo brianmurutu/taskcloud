@@ -12,7 +12,7 @@ export interface PaystackConfig {
 
 // Generate unique payment reference
 export function generateReference(prefix = 'TC'): string {
-  return `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9).toUpperCase()}`
+  return `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2, 11).toUpperCase()}`
 }
 
 // Convert amount to Paystack's smallest unit

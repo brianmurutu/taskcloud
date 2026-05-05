@@ -93,7 +93,8 @@ export default function MyTasksPage() {
           { user_id: submission.tasker_id, type: 'payment_received', amount: payout, currency: task.currency, task_id: taskId, description: `Earned from: ${task.title}`, status: 'completed' },
         ])
         // Update completion stats
-        await supabase.from('profiles').update({ tasks_completed: supabase.rpc('increment') }).eq('id', submission.tasker_id)
+        const { data: taskerProf } = await supabase.from('profiles').select('tasks_completed').eq('id', submission.tasker_id).single()
+        await supabase.from('profiles').update({ tasks_completed: (taskerProf?.tasks_completed || 0) + 1 }).eq('id', submission.tasker_id)
       }
 
       toast.success('Task approved! Payment released to tasker.')
