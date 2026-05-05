@@ -1,3 +1,4 @@
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
 
@@ -8,9 +9,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase URL or Anon Key is missing. Check your .env file.')
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+// Client-side client (for components)
+export const supabase = createClientComponentClient<Database>()
 
-// Server-side client with service role (for API routes)
+// Server-side client with service role (for background tasks/admin ops)
 export const createServerSupabaseClient = () => {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!serviceKey) {

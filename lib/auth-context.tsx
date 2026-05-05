@@ -30,12 +30,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
-    if (data) setProfile(data as Profile)
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+      
+      if (error) {
+        console.error('Error fetching profile:', error)
+        return
+      }
+      
+      if (data) setProfile(data as Profile)
+    } catch (err) {
+      console.error('Unexpected error fetching profile:', err)
+    }
   }
 
   const refreshProfile = async () => {
@@ -43,18 +53,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      if (session?.user) fetchProfile(session.user.id)
-      setLoading(false)
-    })
+    // Get initial session
+    const initAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        setSession(session)
+        setUser(session?.user ?? null)
+        if (session?.user) await fetchProfile(session.user.id)
+      } catch (error) {
+        console.error('Auth initialization error:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    initAuth()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session)
-      setUser(session?.user ?? null)
-      if (session?.user) fetchProfile(session.user.id)
-      else setProfile(null)
+      const newUser = session?.user ?? null
+      setUser(newUser)
+      
+      if (newUser) {
+        await fetchProfile(newUser.id)
+      } else {
+        setProfile(null)
+      }
+      setLoading(false)
     })
 
     return () => subscription.unsubscribe()
