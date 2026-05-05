@@ -4,7 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Zap, Eye, EyeOff, Loader2, ChevronDown } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { supabase as supabaseClient } from '@/lib/supabase'
+const supabase = supabaseClient as any
 import toast from 'react-hot-toast'
 
 const COUNTRIES = [

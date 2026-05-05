@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Send, Loader2, MessageSquare } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
-import { supabase } from '@/lib/supabase'
+import { supabase as supabaseClient } from '@/lib/supabase'
+const supabase = supabaseClient as any
 import { Message, Profile } from '@/types/database'
 import { format } from 'date-fns'
 

@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { Search, Filter, ChevronLeft, ChevronRight, Star, Calendar, Users } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { supabase as supabaseClient } from '@/lib/supabase'
+const supabase = supabaseClient as any
 import { useAuth } from '@/lib/auth-context'
 import { Task, CATEGORIES } from '@/types/database'
 import { formatCurrency } from '@/lib/paystack'

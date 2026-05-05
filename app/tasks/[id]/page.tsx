@@ -7,7 +7,8 @@ import {
   ArrowLeft, Calendar, User, Clock, Star, Shield,
   MessageSquare, ChevronDown, ChevronUp, Loader2, Zap
 } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { supabase as supabaseClient } from '@/lib/supabase'
+const supabase = supabaseClient as any
 import { useAuth } from '@/lib/auth-context'
 import { Task, Application } from '@/types/database'
 import { formatCurrency, calculateFee } from '@/lib/paystack'

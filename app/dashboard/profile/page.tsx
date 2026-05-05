@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { Loader2, Star, CheckCircle, X, Plus } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
-import { supabase } from '@/lib/supabase'
+import { supabase as supabaseClient } from '@/lib/supabase'
+const supabase = supabaseClient as any
 import toast from 'react-hot-toast'
 
 const COUNTRIES = [

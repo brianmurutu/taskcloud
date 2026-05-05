@@ -3,7 +3,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { ArrowDownLeft, ArrowUpRight, Loader2, RefreshCw, Info, CreditCard } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
-import { supabase } from '@/lib/supabase'
+import { supabase as supabaseClient } from '@/lib/supabase'
+const supabase = supabaseClient as any
 import { Transaction } from '@/types/database'
 import {
   formatCurrency, generateReference, toPaystackAmount,
