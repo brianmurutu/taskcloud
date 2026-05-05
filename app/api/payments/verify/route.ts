@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { verifyPaystackPayment, fromPaystackAmount } from '@/lib/paystack'
-import { createClient } from '@supabase/supabase-js'
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,20 +12,11 @@ export async function POST(req: NextRequest) {
 
     // Get authenticated user
     const authHeader = req.headers.get('Authorization')
-    const supabaseServer = createServerSupabaseClient()
+    const supabaseServer = createServerSupabaseClient() as any
 
-    // Get user from session cookie
-    const supabaseAuth = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    )
-
-    const token = req.cookies.get('sb-access-token')?.value
-    if (!token) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const { data: { user } } = await supabaseAuth.auth.getUser(token)
+    // Use the typed client from lib/supabase
+    const { data: { user } } = await supabaseServer.auth.getUser(req.cookies.get('sb-access-token')?.value || '')
+    
     if (!user) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
