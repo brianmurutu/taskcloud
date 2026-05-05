@@ -40,11 +40,11 @@ export async function POST(req: NextRequest) {
               user_id: userId,
               type: 'deposit',
               amount: depositAmount,
-              currency: currency || 'KES',
+              currency: (currency as 'KES' | 'USD') || 'KES',
               status: 'completed',
-              reference,
+              reference: reference as string,
               description: 'Wallet top-up via Paystack',
-              paystack_data: event.data,
+              paystack_data: event.data as Record<string, unknown>,
             })
 
             const { data: profile } = await supabase

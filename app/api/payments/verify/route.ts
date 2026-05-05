@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
 
     const paystackData = verification.data as Record<string, unknown>
     const verifiedAmount = fromPaystackAmount(paystackData.amount as number)
-    const verifiedCurrency = (paystackData.currency as string) || currency
+    const verifiedCurrency = (paystackData.currency as 'KES' | 'USD') || (currency as 'KES' | 'USD')
 
     // Record transaction
     await supabaseServer.from('transactions').insert({
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       amount: verifiedAmount,
       currency: verifiedCurrency,
       status: 'completed',
-      reference,
+      reference: reference as string,
       description: 'Wallet top-up via Paystack',
       paystack_data: paystackData,
     })

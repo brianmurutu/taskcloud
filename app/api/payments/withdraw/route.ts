@@ -52,9 +52,9 @@ export async function POST(req: NextRequest) {
       user_id: user.id,
       type: 'withdrawal',
       amount,
-      currency: currency || profile.wallet_currency,
+      currency: (currency as 'KES' | 'USD') || (profile.wallet_currency as 'KES' | 'USD'),
       status: 'pending',
-      reference,
+      reference: reference as string,
       description: `Withdrawal to M-Pesa ${phone}`,
     })
 
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
       type: 'withdrawal',
       title: 'Withdrawal Requested',
       body: `Your withdrawal of ${currency} ${amount.toLocaleString()} is being processed.`,
-      data: { reference, amount, phone },
+      data: { reference, amount, phone } as Record<string, unknown>,
     })
 
     // TODO: In production, trigger Paystack Transfer API here:

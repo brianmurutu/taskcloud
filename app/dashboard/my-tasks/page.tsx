@@ -89,8 +89,8 @@ export default function MyTasksPage() {
         await supabase.rpc('credit_wallet', { user_id: submission.tasker_id, amount: payout })
         // Record transactions
         await supabase.from('transactions').insert([
-          { user_id: user!.id, type: 'payment_sent', amount: task.budget, currency: task.currency, task_id: taskId, description: `Payment for: ${task.title}`, status: 'completed' },
-          { user_id: submission.tasker_id, type: 'payment_received', amount: payout, currency: task.currency, task_id: taskId, description: `Earned from: ${task.title}`, status: 'completed' },
+          { user_id: user!.id, type: 'payment_sent' as const, amount: task.budget, currency: task.currency as 'KES' | 'USD', task_id: taskId, description: `Payment for: ${task.title}`, status: 'completed' as const },
+          { user_id: submission.tasker_id, type: 'payment_received' as const, amount: payout, currency: task.currency as 'KES' | 'USD', task_id: taskId, description: `Earned from: ${task.title}`, status: 'completed' as const },
         ])
         // Update completion stats
         const { data: taskerProf } = await supabase.from('profiles').select('tasks_completed').eq('id', submission.tasker_id).single()
